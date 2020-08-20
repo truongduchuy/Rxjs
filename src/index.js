@@ -1,10 +1,24 @@
-import { from } from 'rxjs';
-import { max } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-let list1 = [1, 6, 15, 10, 58, 2, 40];
-
-from(list1).pipe(
-    max((a,b)=>a-b)
-    ).subscribe(x => console.log(
-   "The Max value is "+x)
+var observer1 = new Observable(
+   function subscribe(subscriber) {
+      subscriber.next("My First Observable")
+   }
 );
+
+observer1.subscribe(x => console.log(x));
+
+
+var observer2 = new Observable(
+    function subscribe(subscriber) {
+       try {
+          subscriber.next("My First Observable");
+          subscriber.next("Testing Observable");
+          subscriber.complete();
+       } catch(e){
+          subscriber.error(e);
+       }
+    }
+ );
+ observer2.subscribe(x => console.log(x), (e)=>console.log(e), 
+    ()=>console.log("Observable is complete"));
