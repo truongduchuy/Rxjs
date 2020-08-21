@@ -1,24 +1,33 @@
 import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { count } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
-var observer1 = new Observable(
-   function subscribe(subscriber) {
-      subscriber.next("My First Observable")
-   }
-);
+let all_nums = of(1, 7, 5, 10, 10, 20);
+let final_val = all_nums.pipe(count());
+let test = final_val.subscribe(x => console.log("The count is "+x));
+test.unsubscribe();
 
-observer1.subscribe(x => console.log(x));
+const subject_test = new Subject();
 
+subject_test.subscribe({
+   next: (v) => console.log(`From Subject : ${v}`)
+});
 
-var observer2 = new Observable(
-    function subscribe(subscriber) {
-       try {
-          subscriber.next("My First Observable");
-          subscriber.next("Testing Observable");
-          subscriber.complete();
-       } catch(e){
-          subscriber.error(e);
-       }
-    }
- );
- observer2.subscribe(x => console.log(x), (e)=>console.log(e), 
-    ()=>console.log("Observable is complete"));
+subject_test.subscribe({
+   next: (v) => console.log(`From Subject: ${v}`)
+});
+
+// subcribes will be call when subject call next() fuction and stop if it call complete()
+subject_test.next("test");
+subject_test.complete();
+subject_test.next("test subject");
+
+// error
+subject_test.subscribe({
+   error: (e) => console.log(`From Subject : ${e}`)
+});
+subject_test.subscribe({
+   error: (e) => console.log(`From Subject : ${e}`)
+});
+subject_test.error(new Error("There is an error"));
