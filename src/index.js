@@ -1,33 +1,19 @@
-import { Observable } from 'rxjs';
-import { of } from 'rxjs';
-import { count } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
+import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-let all_nums = of(1, 7, 5, 10, 10, 20);
-let final_val = all_nums.pipe(count());
-let test = final_val.subscribe(x => console.log("The count is "+x));
-test.unsubscribe();
+// let final_val = ajax('https://jsonplaceholder.typicode.com/users').pipe(map(e => e.response));
+// let subscriber1 = final_val.subscribe(a => console.log(a));
+// let subscriber2 = final_val.subscribe(a => console.log(a));
 
 const subject_test = new Subject();
 
 subject_test.subscribe({
-   next: (v) => console.log(`From Subject : ${v}`)
-});
-
-subject_test.subscribe({
-   next: (v) => console.log(`From Subject: ${v}`)
-});
-
-// subcribes will be call when subject call next() fuction and stop if it call complete()
-subject_test.next("test");
-subject_test.complete();
-subject_test.next("test subject");
-
-// error
-subject_test.subscribe({
-   error: (e) => console.log(`From Subject : ${e}`)
+   next: (v) => console.log(v)
 });
 subject_test.subscribe({
-   error: (e) => console.log(`From Subject : ${e}`)
+   next: (v) => console.log(v)
 });
-subject_test.error(new Error("There is an error"));
+
+let final_val = ajax('https://jsonplaceholder.typicode.com/users').pipe(map(e => e.response));
+final_val.subscribe(subject_test);
